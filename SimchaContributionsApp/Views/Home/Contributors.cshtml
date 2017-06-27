@@ -1,0 +1,131 @@
+﻿@using SimchaContributionsApp.Models
+@using SimchaContributions.Data
+@model ContributorsViewModel
+@{
+    ViewBag.Title = "Contributors";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-4">
+            <h1>Contributors</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <button class="btn btn-primary" id="show-add-contributor-modal" data-date="@DateTime.Now.ToShortDateString()">New Contributor</button>
+        </div>
+        <div class="col-md-2 col-md-offset-2">
+            <input type="text" class="form-control" id="search-input"  />
+        </div>
+        <div class="col-md-1">
+            <a class="btn btn-primary" href="/Home/Contributors">Clear</a>
+        </div>
+        <div class="col-md-1 col-md-offset-2">
+            <label>Total: $@Model.Total.ToString("0.00")</label>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 40px">
+        <table class="table table-hover table-bordered table-striped">
+            <tr>
+                <th style="text-align:center; vertical-align: middle">Deposit</th>
+                <th style="text-align:center; vertical-align: middle">Name</th>
+                <th style="text-align:center; vertical-align: middle">Cell</th>
+                <th style="text-align:center; vertical-align: middle">Balance</th>
+                <th style="text-align:center; vertical-align: middle">Always Include</th>
+                <th style="text-align:center; vertical-align: middle">Actions</th>
+            </tr>
+            @foreach (ContributorWithBalance c in Model.Contributors)
+            {
+                string color = c.Balance < 0 ? "color: red" : "";
+                <tr>
+                    <td style="text-align:center; vertical-align: middle">
+                        <button class="btn btn-danger deposit" data-id="@c.Contributor.Id"> Deposit</button>
+                    </td>
+                    <td class="name" style="text-align:center; vertical-align: middle; @color">@c.Contributor.FirstName @c.Contributor.LastName</td>
+                    <td style="text-align:center; vertical-align: middle; @color">@c.Contributor.CellNumber</td>
+                    <td style="text-align:center; vertical-align: middle; @color">@c.Balance.ToString("0.00")</td>
+                    <td style="text-align:center; vertical-align: middle">
+                        @if (c.Contributor.AlwaysInclude)
+                        {
+                            <span class='glyphicon glyphicon-ok-circle' aria-hidden='true'></span>
+                        }
+                    </td>
+                    <td style="text-align:center; vertical-align: middle">
+                        <a class="btn btn-success" href="/Home/ShowHistory?id=@c.Contributor.Id">Show History</a>
+                        <button class="btn btn-warning edit" id="edit" data-first-name="@c.Contributor.FirstName"
+                                data-last-name="@c.Contributor.LastName" data-cell-number="@c.Contributor.CellNumber"
+                                data-always-include="@c.Contributor.AlwaysInclude" data-month="@c.Contributor.DateCreated.Month"
+                                data-day="@c.Contributor.DateCreated.Day" data-year="@c.Contributor.DateCreated.Year"
+                                data-id="@c.Contributor.Id">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="contributor-modal">
+    <form method="post" id="form" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" placeholder="First Name" class="form-control" name="firstName" id="first-name" />
+                    <br />
+                    <input type="text" placeholder="Last Name" class="form-control" name="lastName"id="last-name" />
+                    <br />
+                    <input type="text" placeholder="Cell Number" class="form-control" name="cellNumber" id="cell-number"/>
+                    <br />
+                    <input type="text" placeholder="Initial Deposit" class="form-control" name="amount" id="initial-deposit"/>
+                    <br />
+                    <input type="date" placeholder="Created Date" class="form-control" name="dateCreated" id="date-created" />
+                    <br />
+                    <input type="hidden" name="id" id="id" />
+                    <input type="checkbox" name="alwaysInclude" value="true" id="always-include" />
+                    <input type="hidden" name="alwaysInclude" value="false" />
+                    <span>Always Include</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </form>
+</div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deposit-modal">
+    <form method="post" action="/home/adddeposit">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Deposit</h4>
+                </div>
+                <div class="modal-body">
+                    <span>Amount</span>
+                    <input type="text" placeholder="Amount" class="form-control" name="amount" />
+                    <br />
+                    <span>Date</span>
+                    <input type="date" placeholder="Date" class="form-control" name="date" value="@DateTime.Now" />
+                    <input type="hidden" name="contributorId" id="contributor-id"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </form>
+</div><!-- /.modal -->
+
+@section scripts
+{
+    <script src="~/Scripts/Contributors.js"></script>
+}

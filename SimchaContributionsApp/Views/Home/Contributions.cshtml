@@ -1,0 +1,71 @@
+﻿@using SimchaContributionsApp.Models
+@using SimchaContributions.Data
+@model ContributionViewModel
+@{
+    ViewBag.Title = "Contributions";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h2>Contributions to @Model.Simcha.Name</h2>
+        </div>
+        <div class="col-md-2 col-md-offset-3">
+            <input type="text" class="form-control" id="search-input" />
+     </div>
+    <div class="col-md-1">
+        <a class="btn btn-primary" href="/Home/Contributions?id=@Model.Simcha.Id">Clear</a>
+    </div>
+    </div>
+    <div class="row">
+        <form method="POST" action="/Home/UpdateContributors">
+            <table class="table table-bordered table-hover table-striped">
+                <tr>
+                    <th>Contribute</th>
+                    <th>Name</th>
+                    <th>Balance</th>
+                    <th>Always Include</th>
+                    <th>Amount</th>
+                </tr>
+                @for (int i = 0; i < Model.Contributors.Count(); i++)
+                {
+                    ContributorWithContribution c = Model.Contributors[i];
+                    string color = c.Balance < 0 ? "color: red" : "";
+                    <input type="hidden" name="contributions[@i].contributorId" value="@c.Contributor.Id" />
+                    <input type="hidden" name="contributions[@i].simchaId" value="@Model.Simcha.Id"
+                    <tr>
+
+                        <td>
+                            @*<div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate">
+                                    <div class="bootstrap-switch-container">
+                                        <span class="bootstrap-switch-handle-on bootstrap-switch-primary">Yes</span>
+                                        <label class="bootstrap-switch-label">&nbsp;</label>
+                                        <span class="bootstrap-switch-handle-off bootstrap-switch-default">No</span>
+                                        <input class="switch" type="checkbox" checked="@c.IsContributing ? 'checked' : ' ' ">
+                                    </div>
+                                </div>*@
+                            <input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" value="true" name="contributions[@i].isContributing" checked="@c.IsContributing" />
+                            <input type="hidden" data-toggle="toggle" data-on="Yes" data-off="No" name="contributions[@i].isContributing" value="false" />
+                        </td>
+                        <td style="@color">@c.Contributor.FirstName @c.Contributor.LastName</td>
+                        <td  style="@color">@c.Balance.ToString("0.00")</td>
+                        <td>
+                            @if (c.Contributor.AlwaysInclude)
+                            {
+                                <span class='glyphicon glyphicon-ok-circle' aria-hidden='true'></span>
+                            }
+                        </td>
+                        <td>
+                            <input class="form-control" name="contributions[@i].amount" value="@c.Amount.ToString("0.00")" />
+                        </td>
+                    </tr>
+                }
+            </table>
+            <button class="btn btn-warning">Update</button>
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/Contributors.js"></script>
+}

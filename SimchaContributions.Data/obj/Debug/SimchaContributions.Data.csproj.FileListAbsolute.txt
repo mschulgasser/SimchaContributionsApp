@@ -1,0 +1,5 @@
+c:\users\malka\documents\visual studio 2015\Projects\SimchaContributionsApp\SimchaContributions.Data\bin\Debug\SimchaContributions.Data.dll
+c:\users\malka\documents\visual studio 2015\Projects\SimchaContributionsApp\SimchaContributions.Data\bin\Debug\SimchaContributions.Data.pdb
+c:\users\malka\documents\visual studio 2015\Projects\SimchaContributionsApp\SimchaContributions.Data\obj\Debug\SimchaContributions.Data.csprojResolveAssemblyReference.cache
+c:\users\malka\documents\visual studio 2015\Projects\SimchaContributionsApp\SimchaContributions.Data\obj\Debug\SimchaContributions.Data.dll
+c:\users\malka\documents\visual studio 2015\Projects\SimchaContributionsApp\SimchaContributions.Data\obj\Debug\SimchaContributions.Data.pdb

@@ -1,0 +1,24 @@
+﻿@using SimchaContributionsApp.Models
+@using SimchaContributions.Data
+@model ShowHistoryViewModel
+@{
+    ViewBag.Title = "ShowHistory";
+}
+
+<h2>History for @Model.Contributor.FirstName @Model.Contributor.LastName</h2>
+
+<table class="table table-bordered table-hover table-striped">
+    <tr>
+        <th>Action</th>
+        <th>Date</th>
+        <th>Amount</th>
+    </tr>
+    @foreach (Transaction t in Model.Transactions)
+    {
+        <tr>
+            <td>@t.Description</td>
+            <td>@t.Date.ToLongDateString()</td>
+            <td>@t.Amount.ToString("0.00")</td>
+        </tr>
+    }
+</table> 
